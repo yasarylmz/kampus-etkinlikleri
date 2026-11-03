@@ -1,0 +1,713 @@
+﻿=== C:\Users\123ya\OneDrive\Masaüstü\kampus-etkinlikleri-master\src\components\events\EventCard.tsx ===
+import type { Etkinlik } from '../../types/etkinlik';
+
+interface EtkinlikKartiProps {
+  e: Etkinlik;
+  detaylaraGit: (etkinlik: Etkinlik) => void;
+}
+
+export default function EtkinlikKarti({ e, detaylaraGit }: EtkinlikKartiProps) {
+  return (
+    <div style={{ border: '1px solid #ddd', borderTop: '4px solid #1a933d', borderRadius: '4px', padding: '20px', background: 'white', display: 'flex', flexDirection: 'column', gap: '10px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+      <h3 style={{ margin: 0, color: '#333', fontSize: '18px' }}>{e.baslik}</h3>
+      <div><span style={{ color: '#1a933d', background: '#e8f5e9', padding: '4px 8px', borderRadius: '4px', fontSize: '13px', fontWeight: 'bold' }}>{e.kategori}</span></div>
+      <p style={{ margin: '5px 0', fontSize: '14px', color: '#555' }}>Tarih: {e.tarih}, {e.saat}</p>
+      <p style={{ margin: '0 0 5px 0', fontSize: '14px', color: '#555' }}>Yer: {e.yer}</p>
+      <p style={{ margin: '0 0 5px 0', fontSize: '14px', color: '#555' }}>Kontenjan: {e.kontenjan} kiÅŸi</p>
+      <p style={{ margin: '0 0 15px 0', fontSize: '14px', color: '#555', lineHeight: '1.5' }}>{e.aciklama}</p>
+      <div style={{ marginTop: 'auto' }}>
+        <button onClick={() => detaylaraGit(e)} style={{ background: 'none', border: 'none', color: '#1a933d', fontWeight: 'bold', textDecoration: 'underline', cursor: 'pointer', padding: 0 }}>DetaylarÄ± gÃ¶r</button>
+      </div>
+    </div>
+  );
+}
+=== C:\Users\123ya\OneDrive\Masaüstü\kampus-etkinlikleri-master\src\components\events\EventDetail.tsx ===
+import type { Etkinlik } from '../../types/etkinlik';
+
+interface EtkinlikDetayProps {
+  etkinlik: Etkinlik;
+  onGeriDon: () => void;
+  onGuncelle: () => void;
+}
+
+export default function EtkinlikDetay({ etkinlik, onGeriDon, onGuncelle }: EtkinlikDetayProps) {
+  return (
+    <div style={{ background: 'white', padding: '30px', borderRadius: '8px', border: '1px solid #ddd', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
+      <button onClick={onGeriDon} style={{ background: 'none', border: 'none', color: '#1a933d', fontWeight: 'bold', cursor: 'pointer', marginBottom: '20px', padding: 0, fontSize: '16px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+        â† Geri DÃ¶n
+      </button>
+
+      <h2 style={{ fontSize: '28px', color: '#333', marginBottom: '10px', marginTop: 0 }}>{etkinlik.baslik}</h2>
+      
+      <div style={{ marginBottom: '20px' }}>
+        <span style={{ color: '#1a933d', background: '#e8f5e9', padding: '6px 12px', borderRadius: '4px', fontSize: '14px', fontWeight: 'bold' }}>
+          {etkinlik.kategori}
+        </span>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '16px', color: '#555', marginBottom: '30px', background: '#f9f9f9', padding: '20px', borderRadius: '8px' }}>
+        <p style={{ margin: 0 }}><strong>ğŸ“… Tarih ve Saat:</strong> {etkinlik.tarih}, {etkinlik.saat}</p>
+        <p style={{ margin: 0 }}><strong>ğŸ“ Yer:</strong> {etkinlik.yer}</p>
+        <p style={{ margin: 0 }}><strong>ğŸ‘¥ Kontenjan:</strong> {etkinlik.kontenjan} kiÅŸi</p>
+      </div>
+
+      <div style={{ borderTop: '1px solid #eee', paddingTop: '20px' }}>
+        <h3 style={{ fontSize: '20px', color: '#333', marginBottom: '15px' }}>Etkinlik HakkÄ±nda</h3>
+        <p style={{ fontSize: '16px', color: '#555', lineHeight: '1.6', margin: 0 }}>{etkinlik.aciklama}</p>
+      </div>
+
+      <div style={{ marginTop: '30px' }}>
+        <button onClick={onGuncelle} style={{ width: '100%', background: '#f39c12', color: 'white', padding: '14px 24px', border: 'none', borderRadius: '4px', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer' }}>
+          EtkinliÄŸi GÃ¼ncelle
+        </button>
+      </div>
+    </div>
+  );
+}
+=== C:\Users\123ya\OneDrive\Masaüstü\kampus-etkinlikleri-master\src\components\events\EventFilter.tsx ===
+interface EtkinlikFiltresiProps {
+  aramaMetni: string;
+  onAramaDegisti: (deger: string) => void;
+  seciliKategori: string;
+  onKategoriDegisti: (deger: string) => void;
+}
+
+const inputStyle = { width: '100%', padding: '12px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' as const, fontSize: '14px' };
+
+export default function EtkinlikFiltresi({ aramaMetni, onAramaDegisti, seciliKategori, onKategoriDegisti }: EtkinlikFiltresiProps) {
+  return (
+    <div style={{ display: 'flex', gap: '20px', background: 'white', padding: '20px', borderRadius: '8px', border: '1px solid #ddd', marginBottom: '20px' }}>
+      <div style={{ flex: 2 }}>
+        <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>Etkinlik ara</label>
+        <input type="text" placeholder="Ã–rn. atÃ¶lye, kariyer" value={aramaMetni} onChange={(e) => onAramaDegisti(e.target.value)} style={inputStyle} />
+      </div>
+      <div style={{ flex: 1 }}>
+        <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>Kategori</label>
+        <select value={seciliKategori} onChange={(e) => onKategoriDegisti(e.target.value)} style={inputStyle}>
+          <option value="TÃ¼mÃ¼">TÃ¼mÃ¼</option>
+          <option value="Seminer">Seminer</option>
+          <option value="AtÃ¶lye">AtÃ¶lye</option>
+          <option value="SÃ¶yleÅŸi">SÃ¶yleÅŸi</option>
+        </select>
+      </div>
+    </div>
+  );
+}
+=== C:\Users\123ya\OneDrive\Masaüstü\kampus-etkinlikleri-master\src\components\events\EventList.tsx ===
+import type { Etkinlik } from '../../types/etkinlik';
+import EtkinlikKarti from './EventCard'; // Ä°Ã§e aktarma yolu EventCard olarak dÃ¼zeltildi
+
+interface EtkinlikListesiProps {
+  etkinlikler: Etkinlik[];
+  detaylaraGit: (etkinlik: Etkinlik) => void;
+  bosMesaji?: string;
+}
+
+export default function EtkinlikListesi({ etkinlikler, detaylaraGit, bosMesaji = "GÃ¶sterilecek etkinlik bulunamadÄ±." }: EtkinlikListesiProps) {
+  if (etkinlikler.length === 0) {
+    return <p style={{ color: '#777', fontStyle: 'italic', marginBottom: '20px' }}>{bosMesaji}</p>;
+  }
+
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginBottom: '30px' }}>
+      {etkinlikler.map(e => (
+        <EtkinlikKarti key={e.id} e={e} detaylaraGit={detaylaraGit} />
+      ))}
+    </div>
+  );
+}
+=== C:\Users\123ya\OneDrive\Masaüstü\kampus-etkinlikleri-master\src\components\forms\EventForm.tsx ===
+import React from 'react';
+import type { Etkinlik } from '../../types/etkinlik';
+
+interface EtkinlikFormuProps {
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  baslangicVerisi?: Etkinlik | null;
+  butonMetni: string;
+}
+
+const inputStyle = { width: '100%', padding: '12px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' as const, fontSize: '14px' };
+const labelStyle = { display: 'block', fontWeight: 'bold', color: '#333', marginBottom: '8px', fontSize: '14px' };
+
+export default function EtkinlikFormu({ onSubmit, baslangicVerisi, butonMetni }: EtkinlikFormuProps) {
+  return (
+    <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <div>
+        <label style={labelStyle}>Etkinlik AdÄ±</label>
+        <input name="baslik" type="text" defaultValue={baslangicVerisi?.baslik || ''} placeholder="Ã–rn. Kariyer GÃ¼nleri 2026" style={inputStyle} required />
+      </div>
+      <div>
+        <label style={labelStyle}>Kategori</label>
+        <select name="kategori" defaultValue={baslangicVerisi?.kategori || 'Seminer'} style={inputStyle}>
+          <option value="Seminer">Seminer</option>
+          <option value="AtÃ¶lye">AtÃ¶lye</option>
+          <option value="SÃ¶yleÅŸi">SÃ¶yleÅŸi</option>
+          <option value="DiÄŸer">DiÄŸer</option>
+        </select>
+      </div>
+      <div>
+        <label style={labelStyle}>Tarih</label>
+        <input name="tarih" type="text" defaultValue={baslangicVerisi?.tarih || ''} placeholder="Ã–rn. 12 Ekim 2026" style={inputStyle} required />
+      </div>
+      <div>
+        <label style={labelStyle}>Saat</label>
+        <input name="saat" type="time" defaultValue={baslangicVerisi?.saat || ''} style={inputStyle} required />
+      </div>
+      <div>
+        <label style={labelStyle}>Yer</label>
+        <input name="yer" type="text" defaultValue={baslangicVerisi?.yer || ''} placeholder="Ã–rn. A Blok Konferans Salonu" style={inputStyle} required />
+      </div>
+      <div>
+        <label style={labelStyle}>Kontenjan</label>
+        <input name="kontenjan" type="number" defaultValue={baslangicVerisi?.kontenjan || ''} style={inputStyle} required />
+      </div>
+      <div>
+        <label style={labelStyle}>AÃ§Ä±klama</label>
+        <textarea name="aciklama" rows={4} defaultValue={baslangicVerisi?.aciklama || ''} style={inputStyle} required></textarea>
+      </div>
+      <button type="submit" style={{ background: '#1a933d', color: 'white', padding: '14px 24px', border: 'none', borderRadius: '4px', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', marginTop: '10px' }}>
+        {butonMetni}
+      </button>
+    </form>
+  );
+}
+=== C:\Users\123ya\OneDrive\Masaüstü\kampus-etkinlikleri-master\src\components\layout\Footer.tsx ===
+export default function Footer() {
+  return (
+    <footer style={{ textAlign: 'center', padding: '30px', color: '#777', fontSize: '12px', marginTop: 'auto' }}>
+      Orhan Ã–ztekin - 2416501017 - 2026
+    </footer>
+  );
+}
+=== C:\Users\123ya\OneDrive\Masaüstü\kampus-etkinlikleri-master\src\components\layout\Header.tsx ===
+interface HeaderProps {
+  baslik: string;
+  aciklama?: string; // Soru iÅŸareti (?) bu prop'un isteÄŸe baÄŸlÄ± olduÄŸunu gÃ¶sterir
+}
+
+export default function Header({ baslik, aciklama }: HeaderProps) {
+  return (
+    <div style={{ marginBottom: '30px' }}>
+      <h1 style={{ margin: '0 0 10px 0', fontSize: '32px' }}>{baslik}</h1>
+      {aciklama && <p style={{ margin: 0, fontSize: '16px' }}>{aciklama}</p>}
+    </div>
+  );
+}
+=== C:\Users\123ya\OneDrive\Masaüstü\kampus-etkinlikleri-master\src\components\layout\Navigation.tsx ===
+import type { SayfaAdi } from '../../types/page';
+
+interface NavigationProps {
+  aktifSayfa: SayfaAdi;
+  sayfayaGit: (hedef: SayfaAdi) => void;
+}
+
+// App.tsx'ten buraya taÅŸÄ±dÄ±k
+const sekmeStili = (aktif: boolean) => ({
+  background: aktif ? 'white' : 'transparent',
+  color: aktif ? '#1a933d' : 'white',
+  border: 'none',
+  padding: '12px 24px',
+  fontSize: '16px',
+  fontWeight: 'bold',
+  borderTopLeftRadius: '8px',
+  borderTopRightRadius: '8px',
+  cursor: 'pointer'
+});
+
+export default function Navigation({ aktifSayfa, sayfayaGit }: NavigationProps) {
+  return (
+    <div style={{ display: 'flex', gap: '5px' }}>
+      <button onClick={() => sayfayaGit('anasayfa')} style={sekmeStili(aktifSayfa === 'anasayfa')}>Ana Sayfa</button>
+      <button onClick={() => sayfayaGit('etkinlikler')} style={sekmeStili(aktifSayfa === 'etkinlikler')}>Etkinlikler</button>
+      <button onClick={() => sayfayaGit('ekle')} style={sekmeStili(aktifSayfa === 'ekle')}>Ekle</button>
+    </div>
+  );
+}
+=== C:\Users\123ya\OneDrive\Masaüstü\kampus-etkinlikleri-master\src\types\etkinlik.ts ===
+export interface Etkinlik {
+  id: number;
+  baslik: string;
+  kategori: string;
+  tarih: string;
+  saat: string;
+  yer: string;
+  kontenjan: number;
+  aciklama: string;
+}
+=== C:\Users\123ya\OneDrive\Masaüstü\kampus-etkinlikleri-master\src\types\page.ts ===
+export type SayfaAdi = 'anasayfa' | 'etkinlikler' | 'ekle' | 'detay' | 'guncelle';
+=== C:\Users\123ya\OneDrive\Masaüstü\kampus-etkinlikleri-master\src\App.css ===
+.counter {
+  font-size: 16px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border: 2px solid transparent;
+  transition: border-color 0.3s;
+  margin-bottom: 24px;
+
+  &:hover {
+    border-color: var(--accent-border);
+  }
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+.hero {
+  position: relative;
+
+  .base,
+  .framework,
+  .vite {
+    inset-inline: 0;
+    margin: 0 auto;
+  }
+
+  .base {
+    width: 170px;
+    position: relative;
+    z-index: 0;
+  }
+
+  .framework,
+  .vite {
+    position: absolute;
+  }
+
+  .framework {
+    z-index: 1;
+    top: 34px;
+    height: 28px;
+    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
+      scale(1.4);
+  }
+
+  .vite {
+    z-index: 0;
+    top: 107px;
+    height: 26px;
+    width: auto;
+    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
+      scale(0.8);
+  }
+}
+
+#center {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  place-content: center;
+  place-items: center;
+  flex-grow: 1;
+
+  @media (max-width: 1024px) {
+    padding: 32px 20px 24px;
+    gap: 18px;
+  }
+}
+
+#next-steps {
+  display: flex;
+  border-top: 1px solid var(--border);
+  text-align: left;
+
+  & > div {
+    flex: 1 1 0;
+    padding: 32px;
+    @media (max-width: 1024px) {
+      padding: 24px 20px;
+    }
+  }
+
+  .icon {
+    margin-bottom: 16px;
+    width: 22px;
+    height: 22px;
+  }
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+#docs {
+  border-right: 1px solid var(--border);
+
+  @media (max-width: 1024px) {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+}
+
+#next-steps ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  gap: 8px;
+  margin: 32px 0 0;
+
+  .logo {
+    height: 18px;
+  }
+
+  a {
+    color: var(--text-h);
+    font-size: 16px;
+    border-radius: 6px;
+    background: var(--social-bg);
+    display: flex;
+    padding: 6px 12px;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    transition: box-shadow 0.3s;
+
+    &:hover {
+      box-shadow: var(--shadow);
+    }
+    .button-icon {
+      height: 18px;
+      width: 18px;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    margin-top: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    li {
+      flex: 1 1 calc(50% - 8px);
+    }
+
+    a {
+      width: 100%;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+  }
+}
+
+#spacer {
+  height: 88px;
+  border-top: 1px solid var(--border);
+  @media (max-width: 1024px) {
+    height: 48px;
+  }
+}
+
+.ticks {
+  position: relative;
+  width: 100%;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: -4.5px;
+    border: 5px solid transparent;
+  }
+
+  &::before {
+    left: 0;
+    border-left-color: var(--border);
+  }
+  &::after {
+    right: 0;
+    border-right-color: var(--border);
+  }
+}
+=== C:\Users\123ya\OneDrive\Masaüstü\kampus-etkinlikleri-master\src\App.tsx ===
+import React, { useState, useEffect } from 'react';
+import Footer from './components/layout/Footer';
+import Header from './components/layout/Header';
+import Navigation from './components/layout/Navigation';
+import EtkinlikListesi from './components/events/EventList';
+import EtkinlikFiltresi from './components/events/EventFilter';
+import EtkinlikDetay from './components/events/EventDetail';
+import EtkinlikFormu from './components/forms/EventForm';
+import type { Etkinlik } from './types/etkinlik';
+import type { SayfaAdi } from './types/page';
+
+export default function App() {
+  const [aktifSayfa, setAktifSayfa] = useState<SayfaAdi>('anasayfa');
+  const [etkinlikler, setEtkinlikler] = useState<Etkinlik[]>([]);
+  const [aramaMetni, setAramaMetni] = useState<string>('');
+  const [seciliKategori, setSeciliKategori] = useState<string>('TÃ¼mÃ¼');
+  const [seciliEtkinlik, setSeciliEtkinlik] = useState<Etkinlik | null>(null);
+
+  useEffect(() => {
+    setEtkinlikler([
+      { id: 1, baslik: "Kariyer GÃ¼nleri 2026", kategori: "Seminer", tarih: "12 Ekim 2026", saat: "14:00", yer: "A Blok Konferans Salonu", kontenjan: 100, aciklama: "Mezunlarla kariyer sÃ¶yleÅŸileri ve ÅŸirket standlarÄ±." },
+      { id: 2, baslik: "Robotik AtÃ¶lyesi", kategori: "AtÃ¶lye", tarih: "20 Ekim 2026", saat: "10:00", yer: "Bilgisayar LaboratuvarÄ± 2", kontenjan: 20, aciklama: "Arduino ile Ã§izgi izleyen robot yapÄ±mÄ±, baÅŸlangÄ±Ã§ seviyesi." },
+      { id: 3, baslik: "Web TasarÄ±m AtÃ¶lyesi", kategori: "AtÃ¶lye", tarih: "3 KasÄ±m 2026", saat: "15:00", yer: "Bilgisayar LaboratuvarÄ± 1", kontenjan: 30, aciklama: "HTML ve CSS ile ilk kiÅŸisel sayfanÄ± yap." }
+    ]);
+  }, []);
+
+  const sayfayaGit = (hedef: SayfaAdi) => {
+    setAktifSayfa(hedef);
+    setAramaMetni('');
+    setSeciliKategori('TÃ¼mÃ¼');
+  };
+
+  const detaylaraGit = (etkinlik: Etkinlik) => {
+    setSeciliEtkinlik(etkinlik);
+    setAktifSayfa('detay');
+  };
+
+  const etkinligiGuncelle = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!seciliEtkinlik) return;
+
+    const formData = new FormData(e.currentTarget);
+    const guncellenmisEtkinlik: Etkinlik = {
+      ...seciliEtkinlik,
+      baslik: formData.get('baslik') as string,
+      kategori: formData.get('kategori') as string,
+      tarih: formData.get('tarih') as string,
+      saat: formData.get('saat') as string,
+      yer: formData.get('yer') as string,
+      kontenjan: Number(formData.get('kontenjan')),
+      aciklama: formData.get('aciklama') as string,
+    };
+
+    setEtkinlikler(etkinlikler.map(etk => etk.id === guncellenmisEtkinlik.id ? guncellenmisEtkinlik : etk));
+    setSeciliEtkinlik(guncellenmisEtkinlik);
+    setAktifSayfa('detay');
+  };
+
+  const filtrelenmisEtkinlikler = etkinlikler.filter(e => {
+    const metinUygun = e.baslik.toLowerCase().includes(aramaMetni.toLowerCase()) || e.aciklama.toLowerCase().includes(aramaMetni.toLowerCase());
+    const kategoriUygun = seciliKategori === 'TÃ¼mÃ¼' || e.kategori === seciliKategori;
+    return metinUygun && kategoriUygun;
+  });
+
+  let baslik = "";
+  let aciklama = "";
+  if (aktifSayfa === 'anasayfa') { baslik = "KampÃ¼s Etkinlikleri"; aciklama = "FakÃ¼ltedeki seminer, atÃ¶lye ve sÃ¶yleÅŸileri tek yerden takip edin."; }
+  else if (aktifSayfa === 'etkinlikler') { baslik = "TÃ¼m Etkinlikler"; aciklama = "Ekim ayÄ±nda kampÃ¼ste dÃ¼zenlenen etkinlikler."; }
+  else if (aktifSayfa === 'ekle') { baslik = "Etkinlik Ekle"; }
+  else if (aktifSayfa === 'detay') { 
+    // BURASI DEÄÄ°ÅTÄ°: EÄŸer seÃ§ili etkinlik varsa onun adÄ±nÄ±, yoksa standart yazÄ±yÄ± gÃ¶sterir
+    baslik = seciliEtkinlik ? seciliEtkinlik.baslik : "Etkinlik DetayÄ±"; 
+  }
+  else if (aktifSayfa === 'guncelle') { baslik = "EtkinliÄŸi GÃ¼ncelle"; }
+
+  return (
+    <div style={{ fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif', backgroundColor: '#f5f7f6', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      
+      <header style={{ background: '#1a933d', color: 'white', padding: '40px 40px 0 40px' }}>
+        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+          <Header baslik={baslik} aciklama={aciklama} />
+          <Navigation aktifSayfa={aktifSayfa} sayfayaGit={sayfayaGit} />
+        </div>
+      </header>
+
+      <main style={{ maxWidth: '1000px', margin: '40px auto', padding: '0 20px', flex: 1, width: '100%', boxSizing: 'border-box' }}>
+        
+        {aktifSayfa === 'anasayfa' && (
+          <div>
+            <h2 style={{ color: '#333', fontSize: '22px', marginBottom: '20px' }}>YaklaÅŸan 2 Etkinlik</h2>
+            <EtkinlikListesi etkinlikler={etkinlikler.slice(0, 2)} detaylaraGit={detaylaraGit} />
+            <button onClick={() => sayfayaGit('etkinlikler')} style={{ background: '#1a933d', color: 'white', padding: '12px 24px', border: 'none', borderRadius: '4px', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer' }}>
+              TÃ¼m etkinlikleri gÃ¶r
+            </button>
+          </div>
+        )}
+
+        {aktifSayfa === 'etkinlikler' && (
+          <div>
+            <EtkinlikFiltresi aramaMetni={aramaMetni} onAramaDegisti={setAramaMetni} seciliKategori={seciliKategori} onKategoriDegisti={setSeciliKategori} />
+            <p style={{ color: '#1a933d', fontWeight: 'bold', marginBottom: '20px' }}>{filtrelenmisEtkinlikler.length} etkinlik listeleniyor.</p>
+            <EtkinlikListesi etkinlikler={filtrelenmisEtkinlikler} detaylaraGit={detaylaraGit} bosMesaji="Arama kriterlerinize uygun etkinlik bulunamadÄ±." />
+          </div>
+        )}
+
+        {aktifSayfa === 'ekle' && (
+          <div style={{ maxWidth: '600px' }}>
+            <p style={{ color: '#555', marginBottom: '30px' }}>Bu sprintte form sadece gÃ¶rÃ¼nÃ¼m; kayÄ±t yapÄ±lmaz.</p>
+            <EtkinlikFormu onSubmit={(e: React.FormEvent<HTMLFormElement>) => { e.preventDefault(); window.scrollTo(0,0); }} butonMetni="Kaydet" />
+          </div>
+        )}
+
+        {aktifSayfa === 'detay' && seciliEtkinlik && (
+          <EtkinlikDetay etkinlik={seciliEtkinlik} onGeriDon={() => sayfayaGit('etkinlikler')} onGuncelle={() => setAktifSayfa('guncelle')} />
+        )}
+
+        {aktifSayfa === 'guncelle' && seciliEtkinlik && (
+          <div style={{ maxWidth: '600px' }}>
+            <button onClick={() => setAktifSayfa('detay')} style={{ background: 'none', border: 'none', color: '#1a933d', fontWeight: 'bold', cursor: 'pointer', marginBottom: '20px', padding: 0, fontSize: '16px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+              â† Detaylara DÃ¶n
+            </button>
+            <EtkinlikFormu onSubmit={etkinligiGuncelle} baslangicVerisi={seciliEtkinlik} butonMetni="DeÄŸiÅŸiklikleri Kaydet" />
+          </div>
+        )}
+
+      </main>
+
+      <Footer />
+    </div>
+  );
+}
+=== C:\Users\123ya\OneDrive\Masaüstü\kampus-etkinlikleri-master\src\index.css ===
+:root {
+  --text: #6b6375;
+  --text-h: #08060d;
+  --bg: #fff;
+  --border: #e5e4e7;
+  --code-bg: #f4f3ec;
+  --accent: #aa3bff;
+  --accent-bg: rgba(170, 59, 255, 0.1);
+  --accent-border: rgba(170, 59, 255, 0.5);
+  --social-bg: rgba(244, 243, 236, 0.5);
+  --shadow:
+    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.18px;
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #9ca3af;
+    --text-h: #f3f4f6;
+    --bg: #16171d;
+    --border: #2e303a;
+    --code-bg: #1f2028;
+    --accent: #c084fc;
+    --accent-bg: rgba(192, 132, 252, 0.15);
+    --accent-border: rgba(192, 132, 252, 0.5);
+    --social-bg: rgba(47, 48, 58, 0.5);
+    --shadow:
+      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+  }
+
+  #social .button-icon {
+    filter: invert(1) brightness(2);
+  }
+}
+
+#root {
+  width: 1126px;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  border-inline: 1px solid var(--border);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+h1 {
+  font-size: 56px;
+  letter-spacing: -1.68px;
+  margin: 32px 0;
+  @media (max-width: 1024px) {
+    font-size: 36px;
+    margin: 20px 0;
+  }
+}
+h2 {
+  font-size: 24px;
+  line-height: 118%;
+  letter-spacing: -0.24px;
+  margin: 0 0 8px;
+  @media (max-width: 1024px) {
+    font-size: 20px;
+  }
+}
+p {
+  margin: 0;
+}
+
+code,
+.counter {
+  font-family: var(--mono);
+  display: inline-flex;
+  border-radius: 4px;
+  color: var(--text-h);
+}
+
+code {
+  font-size: 15px;
+  line-height: 135%;
+  padding: 4px 8px;
+  background: var(--code-bg);
+}
+=== C:\Users\123ya\OneDrive\Masaüstü\kampus-etkinlikleri-master\src\main.tsx ===
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App.tsx'
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+)
+=== C:\Users\123ya\OneDrive\Masaüstü\kampus-etkinlikleri-master\src\types.ts ===
+export interface Etkinlik {
+  id: number;
+  baslik: string;
+  aciklama: string;
+  tarih: string;
+  mekan: string;
+}
+=== C:\Users\123ya\OneDrive\Masaüstü\kampus-etkinlikleri-master\package.json ===
+{
+  "name": "kampus-etkinlikleri",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "oxlint",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-router-dom": "^7.18.4"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "oxlint": "^1.81.0",
+    "typescript": "~6.0.2",
+    "vite": "^8.3.0"
+  }
+}

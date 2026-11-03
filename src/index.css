@@ -1,0 +1,47 @@
+:root {
+  --renk-ana: #5c8d24;
+  --renk-ana-koyu: #476e1b;
+  --renk-ana-acik: #eef5e6;
+  --renk-metin: #222222;
+  --renk-metin-soluk: #555555;
+  --renk-arkaplan: #f6f8f5;
+  --renk-kart: #ffffff;
+  --renk-kenarlik: #dce2d8;
+  --renk-hata: #d93025;
+  --renk-hata-acik: #fce8e6;
+  --renk-basari: #1e7e34;
+  --renk-basari-acik: #e6f4ea;
+  --kose: 8px;
+  --bosluk-xs: 6px;
+  --bosluk-s: 12px;
+  --bosluk-m: 20px;
+  --bosluk-l: 32px;
+  --golge: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--renk-arkaplan);
+  color: var(--renk-metin);
+  line-height: 1.5;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  color: var(--renk-ana);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
